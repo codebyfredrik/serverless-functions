@@ -1,7 +1,5 @@
 const fetch = require('node-fetch');
 
-console.log({ TEST_VALUE: process.env.TEST_VALUE });
-
 exports.handler = async () => {
   const corgis = await fetch(
     'https://no-cors-api.netlify.app/api/corgis/'
