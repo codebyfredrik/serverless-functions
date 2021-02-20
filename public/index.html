@@ -113,17 +113,25 @@
 
         const handleBoop = (event) => {
           event.preventDefault();
+
           setBooping(true);
-          fetch('./netlify/functions/add-boop', {
+
+          fetch('/.netlify/functions/add-boop', {
             method: 'POST',
             body: JSON.stringify({ id: corgi.id }),
           })
             .then((res) => res.json())
             .then((data) => {
+              console.log(data);
               setBoops(data.updated.count);
               setBooping(false);
-            });
+            })
+            .catch((error) => console.log(error.message));
         };
+
+        const buttonText = booping
+          ? 'Plz hold, booping...'
+          : `Booped ${boops} times`;
 
         return html`
           <div class="corgi">
@@ -141,7 +149,7 @@
               data-id="${corgi.id}"
               disabled=${booping}
             >
-              Booped ${boops} Times
+              ${buttonText}
             </button>
           </div>
         `;
@@ -152,7 +160,6 @@
         const corgis = await fetch(
           '/.netlify/functions/load-corgis'
         ).then((res) => res.json());
-        console.log(corgis);
         render(
           html` ${corgis.map((corgi) => html` <${Corgi} corgi=${corgi} /> `)}`,
           document.querySelector('.corgis')
